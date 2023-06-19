@@ -1,0 +1,61 @@
+body {
+  padding: 3% 2%;
+  font-size: 14px;
+}
+
+td{
+  text-align: center;
+  padding: 3px 8px;
+}
+
+table {
+  border: solid 1px #ccc;
+}
+th {
+  color: #fff;
+  background-color:#ffa500;
+  padding: 3px 8px;
+}
+#searchbox {
+  margin-left: 20px;
+  width: 200px;
+  margin-right: 10px;
+}
+#searchbtn {
+  margin-right: 10px;
+}
+.searchcontainer {
+  display: flex;
+align-items: center;
+
+}
+.statisticscontainer {
+  display: flex;
+  align-items: center;
+
+}
+.prefecturescontainer {
+  margin-bottom: 30px;
+}
+.statisticscontainer ul {
+  display: flex;
+  margin-left: 0;
+}
+.statisticscontainer li {
+  margin-right: 30px;
+}
+.statisticscontainer {
+  display: block;
+}
+button {
+  color: #fff;
+  background-color: #eb6100;
+  border: none;
+  border-radius: 5px;
+  border-bottom: 2px solid #b84c00;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+}
+button:hover {
+ opacity: 0.5;
+ /* border-bottom: 2px solid #b84c00; */
+}

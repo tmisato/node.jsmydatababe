@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>User list</title>
+        <link type="text/css" rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div class="searchcontainer">
+            <h3>名前で検索</h3>
+            <input type="text" id="searchbox" placeholder="キーワードを入力してください"> <button id="searchbtn">検索</button>
+            <button id="resetbtn">検索情報リセット</button>
+        </div>
+        <button id="statisticsbtn">統計を取る</button>
+        <!-- 統計情報追加 -->
+        <div class="statisticscontainer">
+            <ul class="addgender">
+            </ul>
+            <ul class="addprefecture">
+            </ul>
+            <ul class="addhousehold">
+            </ul>
+        </div>
+        <!-- 追加情報ここまで -->
+        <table id="table" border="1" cellspacing="0">
+            <tr>
+                <th>名前</th>
+                <th>ふりがな</th>
+                <th>性別</th>
+                <th>メールアドレス</th>
+                <th>電話番号</th>
+                <th>住所</th>
+                <th>勤務地</th>
+                <th>世帯人数</th>
+                <th>更新</th>
+                <th>削除</th>
+                <th>選択</th>
+            </tr>
+            <% personas.forEach(function (value) { %>
+                <tr class="personInfo">
+                    <td>
+                        <%= value.name %>
+                    </td>
+                    <td>
+                        <%= value.kana_name %>
+                    </td>
+                    <td class="genderstatistics">
+                        <%= value.gender %>
+                    </td>
+                    <td>
+                        <%= value.email %>
+                    </td>
+                    <td>
+                        <%= value.phone %>
+                    </td>
+                    <td>
+                        <%= value.address %>
+                    </td>
+                    <td class="prefecturesstatistics">
+                        <%= value.workplace %>
+                    </td>
+                    <td class="householdstatistics">
+                        <%= value.household %>
+                    </td>
+                    <td><a href="/edit/<%= value.id %>">更新</a></td>
+                    <td><a href="/delete/<%= value.id %>">削除</a></td>
+                    <td><button class="choicebtn">選択</button></td>
+                </tr>
+                <% }); %>
+        </table>
+        
+        <div class="saveInfo"></div>
+        <h2>選択した情報一覧</h2>
+        <table id="addtable" border="1" cellspacing="0">
+            <tr>
+                <th>名前</th>
+                <th>ふりがな</th>
+                <th>性別</th>
+                <th>メールアドレス</th>
+                <th>電話番号</th>
+                <th>住所</th>
+                <th>勤務地</th>
+                <th>世帯人数</th>
+                <th>更新</th>
+                <th>削除</th>
+                <th>選択</th>
+            </tr>
+        </table>
+        <p><a href="/create">ユーザーの追加</a></p>
+        <script type="text/javascript">
+            let searchbtn = document.getElementById("searchbtn");
+            let resetbtn = document.getElementById("resetbtn");
+            let choicebtns = document.querySelectorAll(".choicebtn");
+            let personInfo = document.querySelectorAll(".personInfo");
+            let addtable = document.getElementById("addtable");
+            let statisticsbtn = document.getElementById("statisticsbtn");
+            let genderstatistics = document.querySelectorAll(".genderstatistics");
+            let manbox = document.getElementById("manbox");
+            let womanbox = document.getElementById("womanbox");
+
+            let addgender = document.getElementsByClassName("addgender")[0];
+            let addprefecture = document.getElementsByClassName("addprefecture")[0];
+            let addhousehold = document.getElementsByClassName("addhousehold")[0];
+
+            // 検索ボタン押した時
+            function searchbtnClick() {
+                let searchbox = document.getElementById("searchbox").value;
+                for (let i = 0; i < personInfo.length; i++) {
+                    let nameInfo = personInfo[i].querySelector("td:first-child").innerHTML;
+                    if (nameInfo.includes(searchbox)) {
+                        personInfo[i].style.display = "table-row";
+                    } else {
+                        personInfo[i].style.display = "none";
+                    }
+                }
+            }
+
+            // 検索情報リセット
+            function resetbtnClick() {
+                for (let j = 0; j < personInfo.length; j++) {
+                    personInfo[j].style.display = "table-row";
+                }
+            }
+
+            // 選択ボタン押した時
+            for (let k = 0; k < personInfo.length; k++) {
+                let choicebtn = choicebtns[k];
+                function choicebtnClick() {
+                    personInfo[k].style.display = "none";
+                    addtable.insertAdjacentHTML("beforeend", `<tr>${personInfo[k].innerHTML}<tr>`)
+                }
+                choicebtn.addEventListener("click", choicebtnClick);
+            }
+
+
+            searchbtn.addEventListener("click", searchbtnClick);
+            resetbtn.addEventListener("click", resetbtnClick);
+
+            //統計を取るボタンを押したとき
+
+            function statisticsbtnClick() {
+                addgender.innerHTML = "";
+                addprefecture.innerHTML = "";
+                addhousehold.innerHTML = "";
+
+                //男性・女性の人数
+                let countman = 0;
+                let countwoman = 0;
+                for (let l = 0; l < genderstatistics.length; l++) {
+                    let people = genderstatistics[l];
+                    if (people.innerText === "男性") {
+                        countman++;
+                    }
+                    if (people.innerText === "女性") {
+                        countwoman++;
+                    }
+                }
+                let addman = document.createElement("li");
+                addman.className = "addman";
+                addgender.appendChild(addman);
+                addman.innerHTML = `男性: ${countman}`;
+
+
+                let addwoman = document.createElement("li");
+                addwoman.className = "addwoman";
+                addgender.appendChild(addwoman);
+                addwoman.innerHTML = `女性: ${countwoman}`;
+
+
+                //都道府県の人数
+                let prefecturesStatistics = {}; // 都道府県ごとの統計情報を格納するオブジェクト
+                let prefectures = document.querySelectorAll(".prefecturesstatistics");
+                prefectures.forEach(function (prefecture) {
+                    let prefectureName = prefecture.innerText;
+                    if (prefectureName !== "") {
+                        if (prefecturesStatistics.hasOwnProperty(prefectureName)) {
+                            prefecturesStatistics[prefectureName]++;
+                        } else {
+                            prefecturesStatistics[prefectureName] = 1;
+                        }
+                    }
+                });
+                for (let prefecture in prefecturesStatistics) {
+                    let listItemPrefecture = document.createElement("li");
+
+                    listItemPrefecture.textContent = `${prefecture}: ${prefecturesStatistics[prefecture]}`;
+                    addprefecture.appendChild(listItemPrefecture);
+                }
+
+                //世帯人数
+                let householdStatistics = {}; //    世帯人数ごとの統計情報を格納するオブジェクト
+                let households = document.querySelectorAll(".householdstatistics");
+                households.forEach(function (household) {
+                    let householdNum = household.innerText;
+                    if (householdNum !== "") {
+                        if (householdStatistics.hasOwnProperty(householdNum)) {
+                            householdStatistics[householdNum]++;
+                        } else {
+                            householdStatistics[householdNum] = 1;
+                        }
+                    }
+                });
+                for (let household in householdStatistics) {
+                    let listItemhousehold = document.createElement("li");
+
+                    listItemhousehold.textContent = `${household}人: ${householdStatistics[household]}`;
+                    addhousehold.appendChild(listItemhousehold);
+                }
+            }
+            statisticsbtn.addEventListener("click", statisticsbtnClick);
+
+
+        </script>
+    </body>
+</html>

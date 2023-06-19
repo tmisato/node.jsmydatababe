@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>User Edit</title>
+</head>
+<body>
+    <h1>更新フォーム</h1>
+    <form action="/update/<%= personas[0].id %>" method="POST">
+        名前<input type="text" name="name" value="<%= personas[0].name %>"><br>
+        ふりがな<input type="text" name="kana_name" value="<%= personas[0].kana_name %>"><br>
+        性別<input type="text" name="gender" value="<%= personas[0].gender %>"><br>
+        メールアドレス<input type="text" name="email" value="<%= personas[0].email %>"><br>
+        電話番号<input type="text" name="phone" value="<%= personas[0].phone %>"><br>
+        住所<input type="text" name="address" value="<%= personas[0].address %>"><br>
+        勤務地<input type="text" name="workplace" value="<%= personas[0].workplace %>"><br>
+        世帯人数<input type="text" name="household" value="<%= personas[0].household %>"><br>
+        <button type="submit">更新</button>
+    </form>    
+</body>
+</html>
